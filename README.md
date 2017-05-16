@@ -36,7 +36,7 @@ The selector is divided into two parts separated by `->`, the first part is the 
 
     $ css.selector->attribute,selector
 
-The Selector part can use 
+The Selector part uses Python's string formatting syntax so you can embed the attributes you want within a larger string.
 
 ## Notes
 
