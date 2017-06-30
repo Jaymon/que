@@ -2,7 +2,7 @@
 
 Slice and dice html on the command line using CSS selectors.
 
-## Example
+## Quick start
 
 Let's say you want to grab all the links on **http://example.com/foo/bar**:
 
@@ -14,7 +14,7 @@ Let's say that gave you 3 lines that looked like this:
     /some/url2?val=2
     /some/url3?val=3
 
-Ugh, that's not very helpful, so let's modify our selection:
+Ugh, that's not very helpful, so let's modify our argument a bit:
 
     $ curl http://example.com/foo/bar | que "a->http://example.com{href}"
 
@@ -36,7 +36,33 @@ The selector is divided into two parts separated by `->`, the first part is the 
 
     $ css.selector->attribute,selector
 
-The Selector part uses Python's string formatting syntax so you can embed the attributes you want within a larger string.
+The Selector part uses [Python's string formatting syntax](https://docs.python.org/2/library/string.html#formatspec) so you can embed the attributes you want within a larger string.
+
+
+## Examples
+
+Find all the "Download" links on a page:
+
+que has support for the the non-standard [:contains css selector](https://www.w3.org/TR/2001/CR-css3-selectors-20011113/#content-selectors)
+
+    $ curl http://example.com | que "a:contains(Download)->href"
+
+
+Select all the links with attribute `data` that starts with "foo":
+
+    $ curl http://example.com | que "a[data|=foo]->href"
+
+
+## Installation
+
+You can use pip to install stable:
+
+    $ pip install que
+
+or the latest and greatest (which might be different than what's on [pypi](https://pypi.python.org/pypi/que):
+
+    $ pip install git+https://github.com/jaymon/que#egg=que
+
 
 ## Notes
 

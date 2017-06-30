@@ -57,6 +57,7 @@ def console():
     # TODO -- innerHtml or the like should be possible to print out
     parts = selector.split("->", 1)
     selector = parts[0]
+    contains = ""
     columns = []
     if len(parts) > 1:
         format_strs = re.split(r"(?<!\\),", parts[1])
@@ -74,11 +75,19 @@ def console():
 
             columns.append(column)
 
+    if ":contains" in selector:
+        selector, contains = selector.split(":contains")
+        contains = contains.strip("(\"')")
+
     html = args.infile.read()
     soup = BeautifulSoup(html, "html.parser")
     tags = soup.select(selector)
     for tag in tags:
         vals = []
+        if contains:
+            if contains not in "".join(tag.strings):
+                continue
+
         for column in columns:
             keys = {}
             for attr in column["attrs"]:
