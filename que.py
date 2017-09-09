@@ -52,6 +52,8 @@ class CSVWriter(object):
 
 
 class Selector(str):
+    """Break up the CSS Selector->print string so we know what we are looking for
+    and printing out"""
     def __new__(cls, val):
         instance = super(Selector, cls).__new__(cls, val)
 
@@ -148,6 +150,9 @@ class Selector(str):
 
 
 class Bodies(object):
+    """On the command line you can pass in a url, a file with html, a file with urls on each
+    line, or you can pipe stdin, this class normalizes all that, requesting any urls
+    passed in (from files and args) and returns just the bodies"""
 
     REGEX_URL = re.compile("^\s*\S+:\/\/\S+\s*$", re.M)
 
@@ -252,7 +257,6 @@ def console():
     parser.add_argument("--version", "-V", action='version', version="%(prog)s {}".format(__version__))
     # TODO -- ; (semicolon) should separate different selectors and this should be type=Selectors
     parser.add_argument('selector', type=Selector)
-    #parser.add_argument('infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
     parser.add_argument('input', nargs='*')
 
     args = parser.parse_args()

@@ -6,7 +6,7 @@ Slice and dice html on the command line using CSS selectors.
 
 Let's say you want to grab all the links on **http://example.com/foo/bar**:
 
-    $ curl http://example.com/foo/bar | que "a->href"
+    $ que "a->href" "http://example.com/foo/bar"
 
 Let's say that gave you 3 lines that looked like this:
 
@@ -16,7 +16,7 @@ Let's say that gave you 3 lines that looked like this:
 
 Ugh, that's not very helpful, so let's modify our argument a bit:
 
-    $ curl http://example.com/foo/bar | que "a->http://example.com{href}"
+    $ que "a->http://example.com{href}" "http://example.com/foo/bar"
 
 Now, that will print:
 
@@ -34,7 +34,7 @@ Not sure how to use CSS Selectors?
 
 The selector is divided into two parts separated by `->`, the first part is the traditional selector talked about in the above links and the second part is the attributes you want to print to the screen for each match:
 
-    $ css.selector->attribute,selector
+    $ css.selector->attribute,...
 
 The Selector part uses [Python's string formatting syntax](https://docs.python.org/2/library/string.html#formatspec) so you can embed the attributes you want within a larger string.
 

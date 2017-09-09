@@ -4,18 +4,14 @@ from unittest import TestCase
 import subprocess
 import os
 from contextlib import contextmanager
-
-#from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import SimpleHTTPServer
 import BaseHTTPServer
-#import SocketServer
 
 import testdata
 
 from que import Selector, Bodies
 
 
-#class Webserver(testdata.Thread):
 class WebHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     def __init__(self, request, client_address, server):
@@ -35,23 +31,6 @@ class HTTPServer(BaseHTTPServer.HTTPServer):
         self.base_path = base_path
         BaseHTTPServer.HTTPServer.__init__(self, server_address, RequestHandlerClass)
 
-#     def finish_request(self, request, client_address):
-#         pout.v()
-#         self.RequestHandlerClass(self.base_path, request, client_address, self)
-#         pout.v()
-
-
-# class WebHandlerFactory(object):
-#     def __init__(self, path, request_class=WebHandler):
-#         self.path = path
-#         self.request_class = request_class
-# 
-#     def __call__(self, *args, **kwargs):
-#         instance = self.request_class(*args, **kwargs)
-#         instance.base_path = self.path
-#         pout.v(instance)
-#         return instance
-
 
 class Webserver(object):
     def __init__(self, files, port=8765):
@@ -63,21 +42,9 @@ class Webserver(object):
 
         # TODO -- move all this to start() method
         def target():
-            #httpd = SocketServer.TCPServer(("", port), WebHandler)
-            #factory = WebHandlerFactory(path, WebHandler)
             try:
-                #httpd = HTTPServer(base_path, ("", port), WebHandler)
-                #httpd = BaseHTTPServer.HTTPServer(("", port), factory)
-                #httpd = BaseHTTPServer.HTTPServer(("", port), WebHandler)
                 httpd.serve_forever()
             except Exception as e:
-                pout.v(e)
-                pout.logger.exception(e)
-#                 import sys
-#                 import logging
-#                 logging.basicConfig(format="[%(levelname).1s] %(message)s", level=logging.DEBUG, stream=sys.stdout)
-#                 logger = logging.getLogger(__name__)
-#                 logger.exception(e)
                 raise
 
         th = testdata.Thread(target=target)
@@ -126,8 +93,6 @@ class BodiesTest(TestCase):
         s = set(["foo", "bar", "che"])
 
         with Webserver.start({"{}.html".format(k): k for k in s}) as w:
-            #w = Webserver({"{}.html".format(k): k for k in s})
-
             # make sure whitespace is ignored
             path = testdata.create_file("bodies-url.txt", ["\n{}\n\n".format(w.url("{}.html".format(k))) for k in s])
             bods = Bodies([path])
@@ -147,10 +112,6 @@ class BodiesTest(TestCase):
 
     def test_url_arg(self):
         with Webserver.start({"bodies-url-file.html": ["<p>text</p>"]}) as w:
-#         w = Webserver({
-#             "bodies-url-file.html": ["<p>text</p>"]
-#         })
-
             bods = Bodies([w.url("bodies-url-file.html")])
             for bod in bods:
                 self.assertEqual("<p>text</p>", bod)
@@ -169,18 +130,9 @@ class BodiesTest(TestCase):
             self.assertEqual("<p>text</p>", bod)
 
     def test_request_cache(self):
-#         w = Webserver({
-#             "cached.html": ["<p>text</p>"]
-#         })
-
         with Webserver.start({"cached.html": ["<p>text</p>"]}) as w:
             bods = Bodies([w.url("cached.html")])
             bods.clear_cache()
-
-        # clear out the cache directory
-#         d = testdata.Dirpath(basedir=bods.cache_dir)
-#         pout.v(d)
-#         d.delete()
 
             for bod in bods:
                 self.assertEqual("<p>text</p>", bod)
@@ -217,5 +169,4 @@ class SelectorTest(TestCase):
         rows = list(s.map("<a href=\"...\">This <emphasis>is</emphasis> the <strong>text</strong></a>"))
         self.assertEqual("This <emphasis>is</emphasis> the <strong>text</strong>", rows[0][0])
         self.assertEqual("This is the text", rows[0][1])
-        #pout.v(s.selector, s.contains, s.columns)
 
