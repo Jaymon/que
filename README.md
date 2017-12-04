@@ -31,6 +31,7 @@ Not sure how to use CSS Selectors?
 
 * [Beautiful Soup CSS select docs](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-by-css-class)
 * [JQuery's CSS Selector docs](http://api.jquery.com/category/selectors/)
+* [Sauce Labs Tutorial](https://saucelabs.com/resources/articles/selenium-tips-css-selectors)
 
 The selector is divided into two parts separated by `->`, the first part is the traditional selector talked about in the above links and the second part is the attributes you want to print to the screen for each match:
 
