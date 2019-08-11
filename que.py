@@ -211,6 +211,12 @@ class Bodies(object):
         cache_date_str = "%Y-%m-%dT%H:%M:%S.%fZ"
         now = datetime.datetime.utcnow()
 
+        # !!! - I could use a more full featured caching library here:
+        # https://httpcache.readthedocs.io/en/latest/
+        # https://github.com/reclosedev/requests-cache
+        # https://requests-cache.readthedocs.io/en/latest/user_guide.html
+        # https://realpython.com/blog/python/caching-external-api-requests/
+
         if os.path.isfile(cache_path):
             with codecs.open(cache_path, encoding='utf-8', mode='r+') as fp:
                 d = json.load(fp)
