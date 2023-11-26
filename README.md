@@ -2,6 +2,19 @@
 
 Slice and dice html on the command line using CSS selectors.
 
+## How does it work?
+
+Que's selection string has a left and a right side separated by `->`, the left is the selection and the right is the output. So If I wanted to select all the `A` tags that had the class `foobar`, I could do this:
+
+    a.foobar
+    
+The left selection side uses [CSS Selector syntax](https://www.w3schools.com/cssref/css_selectors.php). And if I wanted to output the actual urls from the selected `A` tags I would use the right side:
+
+    a.foobar->href
+    
+That tells me to select all `A` tags with the class `foobar` and output the `href` attribute.
+
+
 ## Quick start
 
 Let's say you want to grab all the links on **http://example.com/foo/bar**:
@@ -32,7 +45,7 @@ Not sure how to use CSS Selectors?
 * [Beautiful Soup CSS select docs](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-by-css-class)
 * [JQuery's CSS Selector docs](http://api.jquery.com/category/selectors/)
 * [Sauce Labs Tutorial](https://saucelabs.com/resources/articles/selenium-tips-css-selectors)
-* [W3CSchools CSS Selector Reference](https://www.w3schools.com/cssref/css_selectors.asp)
+* [W3CSchools CSS Selector Reference](https://www.w3schools.com/cssref/css_selectors.php)
 
 The selector is divided into two parts separated by `->`, the first part is the traditional selector talked about in the above links and the second part is the attributes you want to print to the screen for each match:
 
@@ -69,4 +82,3 @@ or the latest and greatest (which might be different than what's on [pypi](https
 ## Notes
 
 * If you need a way more fully featured html command line parser, try [hq](https://github.com/rbwinslow/hq).
-

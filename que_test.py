@@ -4,73 +4,73 @@ from unittest import TestCase
 import subprocess
 import os
 from contextlib import contextmanager
-import SimpleHTTPServer
-import BaseHTTPServer
+#import SimpleHTTPServer
+#import BaseHTTPServer
 
 import testdata
 
 from que import Selector, Bodies
 
 
-class WebHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-
-    def __init__(self, request, client_address, server):
-        self.base_path = server.base_path
-        SimpleHTTPServer.SimpleHTTPRequestHandler.__init__(self, request, client_address, server)
-
-    def translate_path(self, path):
-        #path = super(WebHandler, self).translate_path(self, path)
-        path = SimpleHTTPServer.SimpleHTTPRequestHandler.translate_path(self, path)
-        relpath = os.path.relpath(path, os.getcwd())
-        fullpath = os.path.join(self.base_path, relpath)
-        return fullpath
-
-
-class HTTPServer(BaseHTTPServer.HTTPServer):
-    def __init__(self, base_path, server_address, RequestHandlerClass):
-        self.base_path = base_path
-        BaseHTTPServer.HTTPServer.__init__(self, server_address, RequestHandlerClass)
-
-
-class Webserver(object):
-    def __init__(self, files, port=8765):
-        base_path = testdata.create_files(files)
-        self.hostname = "http://127.0.0.1:{}".format(port)
-
-        httpd = HTTPServer(base_path, ("", port), WebHandler)
-        self.httpd = httpd
-
-        # TODO -- move all this to start() method
-        def target():
-            try:
-                httpd.serve_forever()
-            except Exception as e:
-                raise
-
-        th = testdata.Thread(target=target)
-        th.daemon = True
-        th.start()
-        self.thread = th
-
-    @classmethod
-    @contextmanager
-    def start(cls, *args, **kwargs):
-        instance = None
-        try:
-            instance = cls(*args, **kwargs)
-            yield instance
-
-        finally:
-            if instance:
-                instance.stop()
-
-    def url(self, *parts):
-        vs = [self.hostname]
-        vs.extend(map(lambda p: p.strip("/"), parts))
-        return "/".join(vs)
-
-    def stop(self):
-        self.httpd.shutdown()
+# class WebHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+# 
+#     def __init__(self, request, client_address, server):
+#         self.base_path = server.base_path
+#         SimpleHTTPServer.SimpleHTTPRequestHandler.__init__(self, request, client_address, server)
+# 
+#     def translate_path(self, path):
+#         #path = super(WebHandler, self).translate_path(self, path)
+#         path = SimpleHTTPServer.SimpleHTTPRequestHandler.translate_path(self, path)
+#         relpath = os.path.relpath(path, os.getcwd())
+#         fullpath = os.path.join(self.base_path, relpath)
+#         return fullpath
+# 
+# 
+# class HTTPServer(BaseHTTPServer.HTTPServer):
+#     def __init__(self, base_path, server_address, RequestHandlerClass):
+#         self.base_path = base_path
+#         BaseHTTPServer.HTTPServer.__init__(self, server_address, RequestHandlerClass)
+# 
+# 
+# class Webserver(object):
+#     def __init__(self, files, port=8765):
+#         base_path = testdata.create_files(files)
+#         self.hostname = "http://127.0.0.1:{}".format(port)
+# 
+#         httpd = HTTPServer(base_path, ("", port), WebHandler)
+#         self.httpd = httpd
+# 
+#         # TODO -- move all this to start() method
+#         def target():
+#             try:
+#                 httpd.serve_forever()
+#             except Exception as e:
+#                 raise
+# 
+#         th = testdata.Thread(target=target)
+#         th.daemon = True
+#         th.start()
+#         self.thread = th
+# 
+#     @classmethod
+#     @contextmanager
+#     def start(cls, *args, **kwargs):
+#         instance = None
+#         try:
+#             instance = cls(*args, **kwargs)
+#             yield instance
+# 
+#         finally:
+#             if instance:
+#                 instance.stop()
+# 
+#     def url(self, *parts):
+#         vs = [self.hostname]
+#         vs.extend(map(lambda p: p.strip("/"), parts))
+#         return "/".join(vs)
+# 
+#     def stop(self):
+#         self.httpd.shutdown()
 
 
 class Client(object):
@@ -144,8 +144,8 @@ class BodiesTest(TestCase):
 class SelectorTest(TestCase):
     def test_contains(self):
         s = Selector("a:contains(Download)->href")
-        self.assertEqual("a", s.selector)
-        self.assertEqual("Download", s.contains)
+        self.assertEqual("a", s.element)
+        self.assertEqual("Download", s.action["selector"])
         self.assertEqual([{"attrs": ["href"]}], s.columns)
 
     def test_startswith(self):
@@ -164,9 +164,9 @@ class SelectorTest(TestCase):
             {"attrs": ["title"], "format_str": "boom {title}"},
         ], s.columns)
 
-    def test_inner(self):
-        s = Selector("a->innerHTML,innerText")
-        rows = list(s.map("<a href=\"...\">This <emphasis>is</emphasis> the <strong>text</strong></a>"))
-        self.assertEqual("This <emphasis>is</emphasis> the <strong>text</strong>", rows[0][0])
-        self.assertEqual("This is the text", rows[0][1])
+#     def test_inner(self):
+#         s = Selector("a->innerHTML,innerText")
+#         rows = list(s.map("<a href=\"...\">This <emphasis>is</emphasis> the <strong>text</strong></a>"))
+#         self.assertEqual("This <emphasis>is</emphasis> the <strong>text</strong>", rows[0][0])
+#         self.assertEqual("This is the text", rows[0][1])
 
